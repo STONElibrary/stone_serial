@@ -4,8 +4,8 @@
 #include "limits.h"
 
 /* Select the development board master type */
-#define MCU_STM32                  0
-#define MCU_ARDUINO                1
+#define MCU_STM32                  1
+#define MCU_ARDUINO                0
 #define MCU_ESP                    0
 #define MCU_Raspberry_Pi           0
 
@@ -28,7 +28,7 @@ extern UART_HandleTypeDef USER_UART;
 #define transport_unfinished (transport_over_flage == 0)
 /* The serial port sends data, here using DMA, which the user adjusts */
 #define stone_Transmit(BUF, ...); \
-																		memset(BUF+CNT,0,TX_LEN-__VA_ARGS__);\
+																		memset(BUF+__VA_ARGS__,0,TX_LEN-__VA_ARGS__);\
 																		HAL_UART_Transmit_DMA(&USER_UART, (uint8_t *)BUF, __VA_ARGS__);
 #endif
 
