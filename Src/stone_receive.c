@@ -1,7 +1,7 @@
 #include "stone.h"
 
 
-unsigned char STONE_RX_BUF[200];
+unsigned char STONE_RX_BUF[RX_LEN];
 unsigned short STONE_RX_CNT=0;
 const unsigned char frame_head[3]={'S','T','<'};//Frame header flag data
 const unsigned char frame_end[3]={'>','E','T'};//End of frame flag data
