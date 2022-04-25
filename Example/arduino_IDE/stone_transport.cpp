@@ -6,7 +6,7 @@ char transport_over_flage = 1;
 
 
 /* 													Packet functions for the version that sends the command 											*/
-/*	Packets are grouped once for each call and stored in the send buffer after the packet is completed，
+/*	Packets are grouped once for each call and stored in the send buffer after the packet is completed,
  *	The first parameter is the name in JSON format, and the format is a character pointer
  * The second parameter is the value of the JSON format, and the second parameter should be noted that the type is also a character pointer
  * the third parameter is a variable parameter, if the current call is the last set of JSON format you need to add the macro definition parameter JSON_END at the end
@@ -36,6 +36,15 @@ void STONE_JSON (char* name, char* value, ...){
 	if (json_create == 0)
 	TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD);	//ST<{
 	
+	if (TX_CNT>=TX_LEN)
+	{
+		TX_CNT = json_create = 0;
+		memset(STONE_TX_BUF,0,200);
+		sprintf(STONE_TX_BUF,"Input out of range!");		//To prevent overflow
+		tx_create();
+		memset(STONE_TX_BUF,0,200);
+	}
+	
 	TX_CNT += sprintf(STONE_TX_BUF+TX_CNT,"\"%s\"",name);		//"..."
 	
 	STONE_TX_BUF[TX_CNT++] = ':';
@@ -63,7 +72,7 @@ void STONE_JSON (char* name, char* value, ...){
 /* Implementation functions for serial port sending */
 void tx_create (void){
 	
-	stone_Transmit(STONE_TX_BUF);
+	stone_Transmit(STONE_TX_BUF, TX_CNT);
   #if MCU_ARDUINO || MCU_ESP || MCU_STM32
 	uint8_t timeout;
 	transport_over_flage = 0;
@@ -71,7 +80,7 @@ void tx_create (void){
 	{
 		STONE_Delay(1);
 		timeout++;
-		if(timeout==5)transport_over_flage = 1;
+		if(timeout==10)transport_over_flage = 1;
 	}
  #endif
 	
@@ -84,7 +93,7 @@ void set_sys(char* _cmd){
 			strcmp(_cmd,STR_SYS_HELLO)==0 || 
 			strcmp(_cmd,STR_SYS_VERSION)==0)
 		{
-		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//"ST<{cmd_code:"
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
 														"\"%s\","										//"...",
 														"\""STR_TYPE"\":"						//"type":
 														"\""STR_SYSTEM"\""					//"system"
@@ -105,7 +114,7 @@ void set_sleep(char* _tf){
   if (strcmp(_tf,"true")==0 || 
 			strcmp(_tf,"false")==0)
 	{
-		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//"ST<{cmd_code:"
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
 													"\""STR_SET_									//"set_
 															STR_SLEEP"\","						//sleep",
 														"\""STR_TYPE"\":"						//"type":
@@ -122,6 +131,82 @@ void set_sleep(char* _tf){
 			stone_printf("input error!");
 		}
 	#endif
+}
+
+/* Command interface for setting the buzzer time,In milliseconds */
+// Call the example: set_buzzer("100");
+void set_buzzer(char* _time){
+
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															STR_BUZZER"\","						//buzzer",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_SYSTEM"\","					//"system",
+														"\""STR_TIME"\":"					//"time":
+														"%s"												//...
+														STR_END, _time);							//}>ET
+
+		tx_create();
+
+}
+
+//#define set_brightness(_value) set_buzzer(_value)
+/* Command interface for setting backlight brightness, The value ranges from 0 to 100*/
+// Call the example: set_brightness("100");
+void set_brightness(char* _value){
+
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															STR_BRIGHTNESS"\","				//brightness",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_SYSTEM"\","					//"system",
+														"\""STR_BRIGHTNESS"\":"					//"brightness":
+														"%s"												//...
+														STR_END, _value);							//}>ET
+
+		tx_create();
+}
+
+/* Command interface for setting Touch screen calibration (for resistive screens) */
+// Call the example: set_touch_cal();
+void set_touch_cal(void){
+
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															STR_TOUCH_CAL"\","				//touch_cal",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_SYSTEM"\""					//"system"
+														STR_END);							//}>ET
+
+		tx_create();
+}
+
+/* Command interface for remove Touch screen calibration (for resistive screens) */
+// Call the example: clear_touch_cal();
+void clear_touch_cal(void){
+
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_CLEAR_									//"clear_
+															STR_TOUCH_CAL"\","				//touch_cal",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_SYSTEM"\""					//"system"
+														STR_END);							//}>ET
+
+		tx_create();
+}
+
+/* Command interface for Touch screen test */
+// Call the example: set_touch_test();
+void set_touch_test(void){
+
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															STR_TOUCH_CAL"\","				//touch_cal",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_SYSTEM"\""					//"system"
+														STR_END);							//}>ET
+
+		tx_create();
 }
 
 /* Command interface for the command to set the enable state of the widget */
@@ -169,7 +254,7 @@ void set_enable(char* _name, char* _tf, ...){
 // Call the example: set_coordinate("switch1", "100", "200");
 void set_coordinate(char* _name, char* _x, char* _y){
 		
-	TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//"ST<{cmd_code:"
+	TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
 													"\""STR_SET_									//"set_
 															STR_XY"\","								//xy",
 														"\""STR_TYPE"\":"						//"type":
@@ -182,6 +267,96 @@ void set_coordinate(char* _name, char* _x, char* _y){
 														"%s"												//...
 														STR_END, _name, _x, _y);		//}>ET
 
+		tx_create();
+}
+
+/* Command interface for the command Control state */
+// Call the example: set_state("button1", "pressed");
+void set_state(char* _name, char* _state){
+
+		TX_CNT = sprintf(STONE_TX_BUF,STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															STR_STATE"\","				//state",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_WIDGET"\","					//"widget",
+														"\""STR_WIDGET"\":"					//"widget":
+														"\"%s\","										//"...",
+														"\""STR_STATE"\":"					//"state":
+														"\"%s\""										//"..."
+														STR_END,_name,_state);							//}>ET
+
+		tx_create();
+}
+
+/* Command interface for the Set the background image */
+// Call the example: set_bg_image("button1", "guage_bg");
+void set_bg_image(char* _name, char* _image){
+
+		int num = 0;
+		char* str = STR_HEAD_CMD2							//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															"bg_"STR_IMAGE"\","				//bg_image",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_WIDGET"\","					//"widget",
+														"\""STR_WIDGET"\":";
+		strcpy(STONE_TX_BUF,str);
+		while(*str++)num++;
+		STONE_TX_BUF[num++] = '"';
+		str = _name;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		str = "\",bg_"STR_IMAGE"\":\"";
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		str = _image;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		str = "\""STR_END;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		TX_CNT = num;
+		tx_create();
+}
+
+/* Command interface for the Set the background color */
+// Call the example: set_color("button1", "bg_color", "guage_bg");
+void set_color(char* _name, char* _object, char* _color){
+	
+		int num = 0;
+		char* str = STR_HEAD_CMD2														//ST<{"cmd_code":
+													"\""STR_SET_									//"set_
+															STR_COLOR"\","						//color",
+														"\""STR_TYPE"\":"						//"type":
+														"\""STR_WIDGET"\","					//"widget",
+														"\""STR_WIDGET"\":";
+		strcpy(STONE_TX_BUF,str);
+		while(*str++)num++;
+		STONE_TX_BUF[num++] = '"';
+		
+		str = _name;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		
+		str = "\",\""STR_COLOR"_object\":\"";
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		
+		str = _object;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		
+		str = "\",\""STR_COLOR"\":";
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		
+		str = _color;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		
+		str = STR_END;
+		strcpy(STONE_TX_BUF+num,str);
+		while(*str++)num++;
+		TX_CNT = num;
 		tx_create();
 }
 
@@ -256,7 +431,7 @@ void set_text(char* _type, char* _name, char* _text){
 														"\"%s\","										//"...",
 														"\""STR_WIDGET"\":"					//"widget":
 														"\"%s\","										//"...",
-														"\""STR_TYPE"\":"						//"text":
+														"\""STR_TEXT"\":"						//"text":
 														"\"%s\""										//"..."
 														STR_END, _type, _name, _text);		//}>ET
 		tx_create();
@@ -293,7 +468,7 @@ int set_get_value_type(char* m_type){
 
 /* Command interface for the set value command */
 // Call the example: set_value("slider", "slider2", "66");
-//     示例2 set_value("label", "label5", "66.6", "%.2f");
+//     ??2 set_value("label", "label5", "66.6", "%.2f");
 void set_value(char* _type, char* _name, char* _value, ...){
 	
 	va_list p_format;
@@ -316,8 +491,8 @@ void set_value(char* _type, char* _name, char* _value, ...){
 		{
 			TX_CNT += sprintf(STONE_TX_BUF+TX_CNT,",\""STR_FORMAT"\":\"");
 			TX_CNT += sprintf(STONE_TX_BUF+TX_CNT,"%s\"", _format);
-			TX_CNT += sprintf(STONE_TX_BUF+TX_CNT,STR_END);
 		}
+		TX_CNT += sprintf(STONE_TX_BUF+TX_CNT,STR_END);
 		tx_create();
 			
   }
@@ -759,3 +934,25 @@ void set_angle(char* _name, char* _angle){
 														STR_END, _name, _angle);		//}>ET
 		 tx_create();
 }
+
+//int stone_strcpy(char *dst, char *src, ...)
+//{
+//	va_list ap;
+//	char *p, *str;
+//	int cpy_cnt = 0;
+//	
+//	va_start(ap, src);
+//	for (*dst = *src; *dst; src++,dst++)
+//	{
+//		cpy_cnt++;
+//		if(*(dst-1) == '%' && *dst == 's')
+//		{
+//			for (str = va_arg(ap, char *); *str; str++,dst++)
+//			{
+//				*(dst-1)=*str;
+//			}
+//		}
+//	}
+//	va_end(ap);
+//	return cpy_cnt;
+//}
