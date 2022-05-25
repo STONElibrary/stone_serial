@@ -2,7 +2,7 @@
 # Website: https://www.stoneitech.com/
 /* 
  * 	  
- * 	Some instructions for using the STONE serial library v1.0.3
+ * 	Some instructions for using the STONE serial library v1.0.5
  * 
  *   This serial library is created to adapt the commands of STONE serial screen, in order to increase the portability of the code is written in C language, for the current mainstream of several MCUs to do test verification.
  * Please read this document before using it for the first time.
@@ -45,7 +45,7 @@
  *            	                     STONER.data、  STONER.widget、 STONER.text
  * 
  * STONE.cmd will save the cmd_code value in the returned command for subsequent parsing, which can be called by users according to their needs.
- * STONE.cmd will save the len value of the returned command for subsequent parsing, or you can call it according to your needs.
+ * STONE.value will save the len value of the returned command for subsequent parsing, or you can call it according to your needs.
 
  * When there is a value in the command, the return data will be converted to the corresponding type of value according to the type of value.
  * For example, the return value 0 or 1 of the switch control is stored in STONER.value.
