@@ -8,10 +8,10 @@
  * Please read this document before using it for the first time.
  * 
  *  The "stone_config.h" file currently defines four initialization interfaces for the development board：
- * #define MCU_STM32                     0
- * #define MCU_ARDUINO                1
- * #define MCU_ESP                          0
- * #define MCU_Raspberry_Pi           0
+ * #define MCU_STM32                                0
+ * #define MCU_ARDUINO                              1
+ * #define MCU_ESP                                  0
+ * #define MCU_Raspberry_Pi                         0
  * If you use these four types of development boards, you only need to change the definition following from 0 to 1. If you use other series of development boards, you can refer to the initialization templates of the four types of development boards defined following to adjust themselves.
  * The initialization calls are the development board's serial library and several C language standard libraries, while the delay function in the library are also macro-defined as STONE_Delay, so it is easier to change in the header file.
 
