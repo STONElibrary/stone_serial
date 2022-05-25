@@ -1,10 +1,46 @@
 /*
- * 版本V1.0.3
+ * Version V1.0.3
  */
 
 /*
-优化了解析接收数据后存储的缓冲区的内存释放不完整问题
-优化了发送函数的实现方式采用大部分采用一条sprintf接口实现，节省了一些内存空间
-增加了一个STONE_JSON接口，实现串口指令特殊的JSON格式发送方法
-增加了发送一帧指令后的串口等待超时处理机制，使用户发送指令时可连续调用发送接口
+Optimized the problem of incomplete memory release of the buffer stored after parsing the received data.
+Optimized the implementation of the send function, mostly using a sprintf interface to save memory space.
+Added a STONE_JSON interface to realize the special JSON format sending method for serial port commands.
+Added a serial port waiting timeout mechanism after sending a frame of command, so that users can continuously call the sending interface when sending commands.
+
 */
+
+
+
+/*	 Version 1.0.4 update	*/
+1. Fixed the problem of "set_text" interface sending data error
+2. Added the processing of preventing data overflow inside the "STONE_JSON" function
+3. Added "set_buzzer" interface function
+4. Added "set_brightness" interface function
+5. Added "set_touch_cal" interface function
+6. added "clear_touch_cal" interface function
+6. Added "set_touch_test" interface function
+6. Added "set_state" interface function
+7. Fixed the problem that some command data is abnormal when receiving parsed data.
+8. Added image widget return data parsing
+9.Added the return data parsing of spin box widget
+10.Added combo box widget related return data parsing
+11.Added the parsing of text data returned by mledit widget
+12.Added the parsing of data returned by char view widget
+13.Added the parsing of data returned by progress circle widget
+14.Added the parsing of the date data returned by the digit clock widget
+15.Added the parsing of text data returned by hscroll label widget
+16.Optimized the writing of parsing data function to save memory space
+17.Added "set_bg_image" interface function and replaced the internal implementation method.
+18. Added "set_color" interface function, replaced the internal implementation method
+
+
+
+/*	 Version 1.0.5 update	*/
+1. Fixed issue where "set_visible", "close_win", "back_win_to", "set_pause", "set_stop" could not be called
+2. Add the initialization interface for the APM32 chip to the stone_config.h file
+3. Add STONE_RX_CNT2 to stone_receiv. c to count data received by secondary serial ports
+4. Add init_flag to stone_receive_group.c to prevent overflow of the first memory request
+5. Changed the Arduino example
+6. Modified send timeout handling for Arduino
+7. Fixed an issue where 4 bytes of data such as percentages were saved incorrectly
