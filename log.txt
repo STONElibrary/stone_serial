@@ -44,3 +44,7 @@ Added a serial port waiting timeout mechanism after sending a frame of command, 
 5. Changed the Arduino example
 6. Modified send timeout handling for Arduino
 7. Fixed an issue where 4 bytes of data such as percentages were saved incorrectly
+
+
+/*	 Version 1.0.6 update	*/
+1. Fixed a second parsing error when parsing text data in stone_receive_group.c
