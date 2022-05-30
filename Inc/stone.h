@@ -1,9 +1,9 @@
 /*
  * @file        stone.h
  * 
- * @version     V1.0.5
+ * @version     V1.0.6
  * 
- * @date        2022-5-24
+ * @date        2022-5-30
  * 
  * @produce   STONE Technologies
  * 
