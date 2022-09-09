@@ -57,4 +57,4 @@ Added a serial port waiting timeout mechanism after sending a frame of command, 
 3. Fixed an issue where set_value could not set spin_box
 4. Add instructions for setting line_series/bar_series
 6. Add set_selected and get_selected support for combo_box_ex controls
-5. Add set_text to set the text content of two-dimensional code, and set the content of mLEDit control
+5. Add set_text to set the text content of two-dimensional code, and set the content of mledit control
