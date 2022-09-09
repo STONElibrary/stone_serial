@@ -46,5 +46,15 @@ Added a serial port waiting timeout mechanism after sending a frame of command, 
 7. Fixed an issue where 4 bytes of data such as percentages were saved incorrectly
 
 
+
 /*	 Version 1.0.6 update	*/
 1. Fixed a second parsing error when parsing text data in stone_receive_group.c
+
+
+/*	 Version 1.0.7 update	*/
+1. Add the ability to save the two-byte button value to the stone.long_value variable when the user defines the button value
+2. Fixed an issue where the set_angle value had too many quotes
+3. Fixed an issue where set_value could not set spin_box
+4. Add instructions for setting line_series/bar_series
+6. Add set_selected and get_selected support for combo_box_ex controls
+5. Add set_text to set the text content of two-dimensional code, and set the content of mLEDit control
