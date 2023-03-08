@@ -1,9 +1,9 @@
 # stone_serial  
 # Website: https://www.stoneitech.com/
 # Arduino library: https://github.com/STONElibrary/arduino_lib/
-![Image text](extras/stone-display-hmi.png)
+![Image text](stone-display-hmi.png)
 
-![Image text](extras/stone-gui-software.png)
+![Image text](stone-gui-software.png)
 /* 
  * 	  
  * 	Some instructions for using the STONE serial library v1.1.0
