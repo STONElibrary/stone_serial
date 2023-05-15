@@ -1,0 +1,170 @@
+/*
+ * Version V1.0.3
+ */
+
+/*
+Optimized the problem of incomplete memory release of the buffer stored after parsing the received data.
+Optimized the implementation of the send function, mostly using a sprintf interface to save memory space.
+Added a STONE_JSON interface to realize the special JSON format sending method for serial port commands.
+Added a serial port waiting timeout mechanism after sending a frame of command, so that users can continuously call the sending interface when sending commands.
+
+*/
+
+
+
+/*	 Version 1.0.4 update	*/
+1. Fixed the problem of "set_text" interface sending data error
+2. Added the processing of preventing data overflow inside the "STONE_JSON" function
+3. Added "set_buzzer" interface function
+4. Added "set_brightness" interface function
+5. Added "set_touch_cal" interface function
+6. added "clear_touch_cal" interface function
+6. Added "set_touch_test" interface function
+6. Added "set_state" interface function
+7. Fixed the problem that some command data is abnormal when receiving parsed data.
+8. Added image widget return data parsing
+9.Added the return data parsing of spin box widget
+10.Added combo box widget related return data parsing
+11.Added the parsing of text data returned by mledit widget
+12.Added the parsing of data returned by char view widget
+13.Added the parsing of data returned by progress circle widget
+14.Added the parsing of the date data returned by the digit clock widget
+15.Added the parsing of text data returned by hscroll label widget
+16.Optimized the writing of parsing data function to save memory space
+17.Added "set_bg_image" interface function and replaced the internal implementation method.
+18. Added "set_color" interface function, replaced the internal implementation method
+
+
+
+/*	 Version 1.0.5 update	*/
+1. Fixed issue where "set_visible", "close_win", "back_win_to", "set_pause", "set_stop" could not be called
+2. Add the initialization interface for the APM32 chip to the stone_config.h file
+3. Add STONE_RX_CNT2 to stone_receiv. c to count data received by secondary serial ports
+4. Add init_flag to stone_receive_group.c to prevent overflow of the first memory request
+5. Changed the Arduino example
+6. Modified send timeout handling for Arduino
+7. Fixed an issue where 4 bytes of data such as percentages were saved incorrectly
+
+
+
+/*	 Version 1.0.6 update	*/
+1. Fixed a second parsing error when parsing text data in stone_receive_group.c
+
+
+/*	 Version 1.0.7 update	*/
+1. Add the ability to save the two-byte button value to the stone.long_value variable when the user defines the button value
+2. Fixed an issue where the set_angle value had too many quotes
+3. Fixed an issue where set_value could not set spin_box
+4. Add instructions for setting line_series/bar_series
+6. Add set_selected and get_selected support for combo_box_ex controls
+5. Add set_text to set the text content of two-dimensional code, and set the content of mLEDit control
+
+/*	 Version 1.0.8 update	*/
+Send related:
+
+1. Add an interface for setting volume-related commands
+
+2. Add interfaces for setting audio and video related commands
+
+3. Add interfaces related to file read and write instructions
+
+4. Add related interfaces for file deletion, file size acquisition, file download, and USB flash drive uninstallation
+
+5. Fix the BUG of the sending interface defined by the macro
+
+6. Add control coordinates and command interfaces related to control size
+
+7. Add command interfaces related to setting border type and setting border length
+
+8. Add the foreground picture of the control and the command interface related to the background picture of the control
+
+9. Add interfaces related to setting font type, font size, and font alignment
+
+10. Add interface for setting scrolling text related instructions
+
+11. Add the interface for setting gif and svg controls
+
+12. Add an interface for setting pie_slice controls
+
+13. Add interfaces related to the slide_indicator/slide_indicator_arc control
+
+14. Added interfaces related to slide_view and slide_menu controls
+
+15. Added interfaces related to tab_view and scroll_view controls
+
+16. Add the list_view control interface
+
+
+
+Reception related:
+
+1. When serial port 2 is used on ESP32, the received hexadecimal is not displayed when Serial2 is changed in the Ston. config file
+
+2. Optimized the processing speed of serial_receive() function to solve the MCU crash problem caused by large amount of data returned when setting the progress bar control
+
+3. Add the serial_receive_frame() and find_frame_ () functions for parsing a whole frame of serial port data. When using STM32, you can use idle interrupt and call serial_receive_frame() from the interrupt function.
+
+4. Add the serial_receive_frame_idel() function and internally add an arduino framework-based idle serial port interrupt, which can replace the serial_receive() function and be placed in the main loop when used
+
+It's going to have a faster parsing speed
+
+5. Add the response to the write_hex directive. The response data is stored in STONER.data
+
+6. Add the response to the write_text directive. The response data is stored in STONER.data
+
+7. Add the response to the write_line directive. The response data is stored in STONER.data
+
+8. Add the read_hex response, which is stored in STONER.data
+
+9. Add a response to the read_line directive. The response data is stored in STONER.data
+
+10. Add the response to the get_file_size directive. The response data is stored in STONER.data
+
+11. Add the delete_file response, and the response data will be stored in STONER.data
+
+12. Add a response to the set_rename directive. The response data is stored in STONER
+
+13. Add the response to the download_file directive, storing the response data in STONER.data
+
+14. Add a response to the unmount_disk directive. The response data is stored in STONER.data
+
+15. Added the get_xy command response, the response data is saved in STONER.long_value, 0-32bit is y value and 33-64bit is x value
+
+16. Add the get_wh response and save the response data in STONER.long_value, 0-32bit is the length of the control and 33-64bit is the width of the control
+
+17. Increment the response of the get_min directive, with the response data stored in STONER.float_value
+
+18. Increment the response of the get_max directive, in which the response data is stored in STONER.float_value
+
+19. Add a response to the return value of the slide_indicator directive. The response data is stored in STONER.long_value
+
+20. Add the slide_view return value directive's response, and the response data is stored in STONER.long_value
+
+21. Add the slide_menu return value directive response, the response data stored in STONER.long_value
+
+22. Add a response to the tab_button return value directive. The response data is stored in STONER.value
+
+23. Add the response to the tab_view return value directive, and the response data is stored in STONER.long_value
+
+
+/*	 Version 1.0.9 update	*/
+1. Rectify file read/write anomalies in stone_receive_group.c
+
+2. Rectify ESP32 compilation errors in stone_receive.c
+
+3. Add a single linked list for whole-frame instruction receiving in stone_receive.c, and add an example of this function in the arduino example
+
+
+/*	 Version 1.1.0 update	*/
+1.Fix compilation errors
+
+
+/*	 Version 1.1.1 update	*/
+1. Change the STONER.data, STONER.widget, STONER.text, the type of the variable as a signed char
+2. Add data_len, widget_len, text_len to STONER structure, and users can directly call to obtain the corresponding length
+3. Fixed a bug where dynamic memory requests occasionally failed, causing Pointers such as STONER.text to point to null
+4. Change Settings related to audio and video commands
+5. Added the parsing of the window return value instruction
+6. Change the STM32 sample project
+
+
